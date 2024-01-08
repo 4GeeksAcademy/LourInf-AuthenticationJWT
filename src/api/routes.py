@@ -6,6 +6,8 @@ from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 api = Blueprint('api', __name__)
 
@@ -24,7 +26,8 @@ def handle_hello():
 
 # Create a route to authenticate your users and return JWTs. The
 # create_access_token() function is used to actually generate the JWT.
-@api.route("/login", methods=["POST"])   #we change app for api #note: this won't be visible in the browser as it's POST (we use postman for that) In the browser we see only GET requests
+# este es mi login donde hay un username y tiene que ser = a "test" y password que es = a "test". Esto es lo que tenemos que enviar en Postman para logearse
+@api.route("/login", methods=["POST"])   #we change app for api #note: this won't be visible in the browser as it's POST (we use postman for that) In the browser we see only GET requests. In POSTMAN it will give me as result the token
 def login():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
@@ -34,3 +37,12 @@ def login():
 
     access_token = create_access_token(identity=username)  #remember to import create_access_token!
     return jsonify(access_token=access_token)
+
+# Protect a route with jwt_required, which will kick out requests
+# without a valid JWT present.
+@api.route("/private", methods=["GET"]) #change app for api!
+@jwt_required()
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
