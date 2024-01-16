@@ -1,6 +1,8 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			//1.Definir un store (estado global) en flux para saber si hay un usuario logeado o no lo está.
+			isLoggedIn: false,
 			message: null,
 			demo: [
 				{
@@ -16,7 +18,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
+			login: (token) => {
+				// 2. Definir las actions para cambiar de estado ese store y además para guardar o remover el token en el localStorage.
+				setStore({ isLoggedIn: true });
+				localStorage.setItem("token", token); // como lo hemos puesto aquí, lo quito del backend
+			},
+			logout: () => {
+				setStore({ isLoggedIn: false });
+				localStorage.setItem("token", token); 
+			}
+			isLogged: () => {
+				if (localStorage.getItem("token")) {
+					setStore({isLoggedIn: true});
+				} else {
+					setStore({ isLoggedIn: false });
+				}
+			}
+			// Use getActions to call a function within a function
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
