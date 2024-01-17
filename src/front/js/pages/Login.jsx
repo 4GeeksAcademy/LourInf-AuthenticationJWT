@@ -1,45 +1,63 @@
 import React, { useContext, useState } from "react";
+import { Context } from "../store/appContext.js";
+import { Navigate } from "react-router-dom";
+
 
 export const Login = () => {
     const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("test@example.com")
     const [password, setPassword] = useState("test")
 
+    // when user clicks on button Login I want it to send to the back-end the variables with the email and password. For that I do a fetch
     const handleOnClick = async () => {
-        const url = "https://probable-space-winner-g9456w5ggq53w55j-3001.app.github.dev"; 
+        const url = process.env.BACKEND_URL + "/api/Login"; 
         const options = {
             method: "POST",
-            body: JSON.stringify({username:email, password:password}),
+            body: JSON.stringify({email:email, password:password}), //send as object// email & password need to match whatever we set in the back-end in the login route
             headers: {
-                "Content-Type": "application/json"
-            }
-
+                "Content-Type": "application/json"}
         }
         const response = await fetch(url, options);
-        console.log(response);
-            const data = await response.json()
-            localStorage.setItem("token",data.access_token);
-            console.log(data)
+        if (!response.ok){
+            console.log("Error:", response.status, response.statusText)
+            console.log(email, password)
         }
-        console.log(response.status, response.statusText);
-
+        const data = await response.json();
+        actions.login(data.access_token)
+        //localStorage.setItem("token",data.access_token);
+        console.log(data);
+        console.log(response);
+        }
 
         return (
             <div>
                 {store.isLoggedIn ? (
-                    navigate('/dashboard')
+                    Navigate('/dashboard')
                 ) : (
                     <div>
-                        <h1>Login</h1>
+                        <h1 className="text-center">Login</h1>
                         {/* 1. form with at least 2 inputs (email and password)
                             2. control those inputs with onChange and useState
                         */}
-                        <label>Email:</label>
-                        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-                        <label>Password:</label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        <button onClick={handleOnClick}>Log in</button>
-                    </div>
+                        <div className="m-3">
+                            <div className="mb-3">
+                                <label htmlFor="email" className="form-label">email/Email:</label>
+                                <input type="email" className="form-control" id="email" aria-describedby="emailHelp"
+                                        value={email} onChange={(e) => setEmail(e.target.value)} />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="password" className="form-label">Password:</label>
+                                <input type="password" className="form-control" id="password"
+                                        value={password} onChange={(e) => setPassword(e.target.value)} />
+                                </div>
+                                <div className="mb-3 form-check">
+                                <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+                                <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+                                </div>
+                                <button className="btn btn-secondary m-2" onClick={handleOnClick}>Login</button>
+                            </div>
+                        </div>
                 )}
             </div>
         );
+    };

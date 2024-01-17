@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 # We create a class (1 class = 1 table) that will inherit from the Flask-SQLAlchemy Model class. Naming convention: PascalCase, plural
-class User(db.Model):
+class Users(db.Model):
      # 1. We create the table alias __tablename__. Naming convention: snake_case
     __tablename__ = "users"
      # 2. We define the columns of the table:

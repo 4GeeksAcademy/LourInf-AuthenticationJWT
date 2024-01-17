@@ -18,22 +18,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
-			login: (token) => {
+			login: (token) =>{
 				// 2. Definir las actions para cambiar de estado ese store y además para guardar o remover el token en el localStorage.
-				setStore({ isLoggedIn: true });
-				localStorage.setItem("token", token); // como lo hemos puesto aquí, lo quito del backend
-			},
-			logout: () => {
-				setStore({ isLoggedIn: false });
-				localStorage.setItem("token", token); 
-			}
-			isLogged: () => {
-				if (localStorage.getItem("token")) {
-					setStore({isLoggedIn: true});
+				if (!token){
+					setStore({isLoggedIn: false})
 				} else {
-					setStore({ isLoggedIn: false });
+					setStore({isLoggedIn: true});
+					localStorage.setItem("token", token); // como lo hemos puesto aquí, lo quito del backend
 				}
-			}
+			},
+			logout: () =>{
+				setStore({isLoggedIn: false});
+				localStorage.removeItem("token")
+			},
+			isLogged: () => {
+				if (localStorage.getItem("token")){
+					setStore({isLoggedIn: true})
+				} 
+				else {
+					setStore({isLoggedIn: false})
+				}
+			},
 			// Use getActions to call a function within a function
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
