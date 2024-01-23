@@ -20,12 +20,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 			login: (token) =>{
 				// 2. Definir las actions para cambiar de estado ese store y además para guardar o remover el token en el localStorage.
-				if (!token){
-					setStore({isLoggedIn: false})
-				} else {
 					setStore({isLoggedIn: true});
 					localStorage.setItem("token", token); // como lo hemos puesto aquí, lo quito del backend
-				}
 			},
 			logout: () =>{
 				setStore({isLoggedIn: false});

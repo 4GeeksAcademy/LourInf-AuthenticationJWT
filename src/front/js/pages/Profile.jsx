@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext.js";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 //leer el token de localStorage localStorage.getItem("token")
 //hacer un fetch "GET", header (aqui tengo mmandar el token)
@@ -9,11 +9,12 @@ import { Navigate } from "react-router-dom";
 
 export const Profile = () =>{
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate()
 
     const handleOnClick= () => actions.logout();
 
     return(
-        !store.isLoggedIn ? <Navigate to='/login' /> :
+        !store.isLoggedIn ? navigate ('/login') :
         <div>
             <h1 className="text-center">Profile</h1>
             <div className="card text-center m-3">

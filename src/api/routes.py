@@ -62,25 +62,25 @@ def profile():
     response_body["message"] = "show user profile"
     return response_body, 200
 
-#Sign-up route:
+
+# Sign-up route:
 @api.route('/signup', methods=['POST'])
 def signup():
     response_body = {}
     data = request.json
     print(data)
-    # here we write the logic to save the new user in our DB:
-    user = Users(email = data.get('email'), # we create a new instance of the Users class and sets different attributes of the new user object to the values obtained from the "email","password",etc keys in the JSON data
-                 password = data.get('password'),
-                 is_active = True,
-                 )
     # Check if the user with the same email already exists in the DB
-    user_exist = db.session.execute(db.select(Users).where(Users.email == user.email)).scalar()
+    user_exist = db.session.execute(db.select(Users).where(Users.email == data.get('email'))).scalar()
     if user_exist:
         return jsonify({"message": "This email already exists. Please log in"}), 401
-    db.session.add(user) # Adds the user object (representing a new user), but it's still "pending" of being committed to the actual DB
-    db.session.commit() # Change commited. Now the new user is actually saved in the database
+    # Here we write the logic to save the new user in our DB:
+    user = Users(email = data.get('email'),  # We create a new instance of the Users class and sets different attributes of the new user object to the values obtained from the "email","password",etc keys in the JSON data
+                 password = data.get('password'),
+                 is_active = True)
+    db.session.add(user)  # Adds the user object (representing a new user), but it's still "pending" of being committed to the actual DB
+    db.session.commit()  # Change commited. Now the new user is actually saved in the database
     response_body['user'] = user.serialize()  # this is our response_body['results'] and we serialized user data for the response
     response_body['message'] = "User successfully created"
-    access_token = create_access_token(identity=[user.email, True]) # so we now can generate an access token for the new user
+    access_token = create_access_token(identity=[user.email, True])  # so we now can generate an access token for the new user
     response_body['access_token'] = access_token
     return response_body, 200

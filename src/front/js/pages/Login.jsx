@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext.js";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export const Login = () => {
     const { store, actions } = useContext(Context);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const navigate = useNavigate()
 
     // when user clicks on button Login I want it to send to the back-end the variables with the email and password. For that I do a fetch
     const handleOnClick = async () => {
@@ -32,7 +33,7 @@ export const Login = () => {
         return (
             <div>
                 {store.isLoggedIn ? (
-                    Navigate('/dashboard')
+                    navigate("/dashboard")
                 ) : (
                     <div>
                         <h1 className="text-center">Login</h1>

@@ -1,8 +1,12 @@
 import React, { useContext, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
+import { Context } from "../store/appContext";
 
 export const Dashboard = () => {
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate(); // 2. Initialize useNavigate
+
+
 
     const handleLogout = () => {
         actions.logout();
@@ -15,13 +19,13 @@ export const Dashboard = () => {
             {store.isLoggedIn ? (
                 <>
                     <h1>Dashboard</h1>
-                    <p>Welcome, {store.userFullName}!</p>
+                    <p>Welcome! You have signed up correctly</p>
                     {/* Add your dashboard content here */}
                     <button onClick={handleLogout}>Logout</button>
                 </>
             ) : (
                 <>
-                    <Navigate to="/login" /> {/* Redirect to login if not logged in */}
+                   {navigate("/login")} {/* 3. Use useNavigate to redirect to /login */}
                 </>
             )}
         </div>
