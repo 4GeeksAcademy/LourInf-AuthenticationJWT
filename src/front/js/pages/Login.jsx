@@ -5,12 +5,12 @@ import { Navigate } from "react-router-dom";
 
 export const Login = () => {
     const { store, actions } = useContext(Context);
-    const [email, setEmail] = useState("test@example.com")
-    const [password, setPassword] = useState("test")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
 
     // when user clicks on button Login I want it to send to the back-end the variables with the email and password. For that I do a fetch
     const handleOnClick = async () => {
-        const url = process.env.BACKEND_URL + "/api/Login"; 
+        const url = process.env.BACKEND_URL + "/api/login"; 
         const options = {
             method: "POST",
             body: JSON.stringify({email:email, password:password}), //send as object// email & password need to match whatever we set in the back-end in the login route
